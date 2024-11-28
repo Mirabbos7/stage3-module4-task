@@ -63,8 +63,8 @@ public class TagController implements BaseController<TagDtoRequest, TagDtoRespon
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CommandHandler(operation = 15)
-    public boolean deleteById(@PathVariable Long id) {
-        return tagService.deleteById(id);
+    public void deleteById(@PathVariable Long id) {
+        tagService.deleteById(id);
     }
 
     @GetMapping("/{newsId}")

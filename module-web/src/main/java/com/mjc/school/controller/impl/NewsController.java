@@ -76,8 +76,8 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CommandHandler(operation = 5)
-    public boolean deleteById(@PathVariable Long id) {
-        return newsService.deleteById(id);
+    public void deleteById(@PathVariable Long id) {
+        newsService.deleteById(id);
     }
 
     @CommandHandler(operation = 23)

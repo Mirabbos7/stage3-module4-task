@@ -17,5 +17,5 @@ public interface BaseController<T, R, K> {
 
     R patch(Long id, T patchRequest);
 
-    boolean deleteById(K id);
+    void deleteById(K id);
 }

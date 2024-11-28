@@ -75,8 +75,8 @@ public class AuthorController implements BaseController<AuthorDtoRequest, Author
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CommandHandler(operation = 10)
-    public boolean deleteById(@PathVariable Long id) {
-        return authorService.deleteById(id);
+    public void deleteById(@PathVariable Long id) {
+        authorService.deleteById(id);
     }
     @GetMapping("/{newsId}")
     @ResponseStatus(HttpStatus.OK)

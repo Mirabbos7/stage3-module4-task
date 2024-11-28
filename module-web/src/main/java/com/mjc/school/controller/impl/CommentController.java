@@ -76,8 +76,8 @@ public class CommentController implements BaseController<CommentDtoRequest, Comm
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CommandHandler(operation = 20)
-    public boolean deleteById(@PathVariable Long id) {
-        return commentService.deleteById(id);
+    public void deleteById(@PathVariable Long id) {
+        commentService.deleteById(id);
     }
 
     @GetMapping("/{newsId}")

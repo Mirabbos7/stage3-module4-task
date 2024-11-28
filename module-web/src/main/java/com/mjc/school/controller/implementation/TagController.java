@@ -7,6 +7,7 @@ import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
 import com.mjc.school.service.dto.TagDtoRequest;
 import com.mjc.school.service.dto.TagDtoResponse;
+import com.mjc.school.service.implementation.TagServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,10 +21,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/tags")
 public class TagController {
-    private final TagService tagService;
+    private final TagServiceImpl tagService;
 
     @Autowired
-    public TagController(TagService tagService) {
+    public TagController(TagServiceImpl tagService) {
         this.tagService = tagService;
     }
 

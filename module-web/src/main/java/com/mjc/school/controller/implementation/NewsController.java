@@ -10,6 +10,7 @@ import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
 import com.mjc.school.service.dto.NewsDtoRequest;
 import com.mjc.school.service.dto.NewsDtoResponse;
+import com.mjc.school.service.implementation.NewsServiceImpl;
 import com.mjc.school.service.query.NewsQueryParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,22 +25,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/news")
 public class NewsController {
-    private final NewsService newsService;
-    private final AuthorService authorService;
-    private final TagService tagService;
-    private final CommentService commentService;
+    private final NewsServiceImpl newsService;
 
     @Autowired
     public NewsController(
-        NewsService newsService,
-        AuthorService authorService,
-        TagService tagService,
-        CommentService commentService
+            NewsServiceImpl newsService
     ) {
         this.newsService = newsService;
-        this.authorService = authorService;
-        this.tagService = tagService;
-        this.commentService = commentService;
     }
 
 

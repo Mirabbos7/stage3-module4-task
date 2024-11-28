@@ -7,6 +7,7 @@ import com.mjc.school.service.dto.AuthorDtoRequest;
 import com.mjc.school.service.dto.AuthorDtoResponse;
 import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
+import com.mjc.school.service.implementation.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,9 +21,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/comments")
 public class CommentController {
-    private final CommentService commentService;
+    private final CommentServiceImpl commentService;
     @Autowired
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentServiceImpl commentService) {
         this.commentService = commentService;
     }
 

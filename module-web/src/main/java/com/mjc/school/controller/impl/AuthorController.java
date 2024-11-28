@@ -58,10 +58,16 @@ public class AuthorController implements BaseController<AuthorDtoRequest, Author
     }
 
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 9)
-    public AuthorDtoResponse update(@RequestBody AuthorDtoRequest updateRequest) {
+    public AuthorDtoResponse update(@PathVariable Long id, @RequestBody AuthorDtoRequest updateRequest) {
+        return authorService.update(updateRequest);
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AuthorDtoResponse patch(@PathVariable Long id, @RequestBody AuthorDtoRequest updateRequest) {
         return authorService.update(updateRequest);
     }
 

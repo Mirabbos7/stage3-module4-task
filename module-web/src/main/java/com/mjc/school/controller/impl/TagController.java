@@ -49,7 +49,14 @@ public class TagController implements BaseController<TagDtoRequest, TagDtoRespon
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 14)
-    public TagDtoResponse update(@RequestBody TagDtoRequest updateRequest) {
+    public TagDtoResponse update(@PathVariable Long id, @RequestBody TagDtoRequest updateRequest) {
+        return tagService.update(updateRequest);
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    @CommandHandler(operation = 14)
+    public TagDtoResponse patch(@PathVariable Long id, @RequestBody TagDtoRequest updateRequest) {
         return tagService.update(updateRequest);
     }
 

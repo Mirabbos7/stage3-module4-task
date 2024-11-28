@@ -61,7 +61,14 @@ public class CommentController implements BaseController<CommentDtoRequest, Comm
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 19)
-    public CommentDtoResponse update(@RequestBody CommentDtoRequest updateRequest) {
+    public CommentDtoResponse update(@PathVariable Long id, @RequestBody CommentDtoRequest updateRequest) {
+        return commentService.update(updateRequest);
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    @CommandHandler(operation = 19)
+    public CommentDtoResponse patch(@PathVariable Long id, @RequestBody CommentDtoRequest updateRequest) {
         return commentService.update(updateRequest);
     }
 

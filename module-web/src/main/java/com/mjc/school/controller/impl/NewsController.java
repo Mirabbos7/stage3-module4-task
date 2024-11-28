@@ -61,7 +61,14 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 4)
-    public NewsDtoResponse update(@RequestBody NewsDtoRequest updateRequest) {
+    public NewsDtoResponse update(@PathVariable Long id, @RequestBody NewsDtoRequest updateRequest) {
+        return newsService.update(updateRequest);
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    @CommandHandler(operation = 4)
+    public NewsDtoResponse patch(@PathVariable Long id, @RequestBody NewsDtoRequest updateRequest) {
         return newsService.update(updateRequest);
     }
 

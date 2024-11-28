@@ -1,21 +1,11 @@
-package com.mjc.school.controller.implementation;
+package com.mjc.school.controller.impl;
 
 import com.mjc.school.controller.BaseController;
 import com.mjc.school.controller.annotation.CommandHandler;
-import com.mjc.school.service.AuthorService;
-import com.mjc.school.service.CommentService;
 import com.mjc.school.service.NewsService;
-import com.mjc.school.service.TagService;
-import com.mjc.school.service.dto.CommentDtoRequest;
-import com.mjc.school.service.dto.CommentDtoResponse;
-import com.mjc.school.service.dto.NewsDtoRequest;
-import com.mjc.school.service.dto.NewsDtoResponse;
-import com.mjc.school.service.implementation.NewsServiceImpl;
+import com.mjc.school.service.dto.*;
 import com.mjc.school.service.query.NewsQueryParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/news")
-public class NewsController {
-    private final NewsServiceImpl newsService;
+public class NewsController implements BaseController<NewsDtoRequest, NewsDtoResponse, Long>{
+    private final NewsService newsService;
 
     @Autowired
     public NewsController(
-            NewsServiceImpl newsService
+            NewsService newsService
     ) {
         this.newsService = newsService;
     }
@@ -38,16 +28,11 @@ public class NewsController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 1)
-    public Page<NewsDtoResponse> readAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort
-    ) {
-        Pageable pageable = PageRequest.of(page, size, parseSort(sort));
-
-        Page<NewsDtoResponse> news = newsService.readAll(pageable);
-
-        return news;
+    public List<NewsDtoResponse> readAll(
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(name = "sort_by", required = false, defaultValue = "id::asc") String sortBy) {
+        return newsService.readAll(page, size, sortBy);
     }
 
     private Sort parseSort(String[] sort) {

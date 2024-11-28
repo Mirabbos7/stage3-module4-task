@@ -1,43 +1,35 @@
-package com.mjc.school.controller.implementation;
+package com.mjc.school.controller.impl;
 
 import com.mjc.school.controller.BaseController;
 import com.mjc.school.controller.annotation.CommandHandler;
 import com.mjc.school.service.AuthorService;
 import com.mjc.school.service.dto.AuthorDtoRequest;
 import com.mjc.school.service.dto.AuthorDtoResponse;
-import com.mjc.school.service.implementation.AuthorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/authors")
-public class AuthorController {
-    private final AuthorServiceImpl authorService;
+public class AuthorController implements BaseController<AuthorDtoRequest, AuthorDtoResponse, Long> {
+    private final AuthorService authorService;
 
     @Autowired
-    public AuthorController(AuthorServiceImpl authorService) {
+    public AuthorController(AuthorService authorService) {
         this.authorService = authorService;
     }
 
     @GetMapping
-
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 6)
-    public Page<AuthorDtoResponse> readAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort
-    ) {
-        Pageable pageable = PageRequest.of(page, size, parseSort(sort));
-
-        Page<AuthorDtoResponse> authors = authorService.readAll(pageable);
-
-        return authors;
+    public List<AuthorDtoResponse> readAll(
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(name = "sort_by", required = false, defaultValue = "id::asc") String sortBy) {
+        return authorService.readAll(page, size, sortBy);
     }
 
     private Sort parseSort(String[] sort) {

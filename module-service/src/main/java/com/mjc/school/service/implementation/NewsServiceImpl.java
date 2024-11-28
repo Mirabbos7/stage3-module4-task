@@ -14,8 +14,6 @@ import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.query.NewsQueryParams;
 import com.mjc.school.service.validator.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,10 +43,8 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<NewsDtoResponse> readAll(Pageable pageable) {
-        Page<News> newsPage = newsRepository.readAll(pageable);
-
-        return newsPage.map(news -> mapper.modelToDto(news));
+    public List<NewsDtoResponse> readAll(int page, int size, String sortBy) {
+        return mapper.modelListToDtoList(newsRepository.readAll(page, size, sortBy));
     }
 
     @Override

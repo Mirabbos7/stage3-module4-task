@@ -8,8 +8,6 @@ import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
 import com.mjc.school.service.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,10 +34,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CommentDtoResponse> readAll(Pageable pageable) {
-        Page<Comment> commentPage = commentRepository.readAll(pageable);
-
-        return commentPage.map(comment -> mapper.modelToDto(comment));
+    public List<CommentDtoResponse> readAll(int page, int size, String sortBy) {
+        return mapper.modelListToDtoList(commentRepository.readAll(page, size, sortBy));
     }
 
     @Override

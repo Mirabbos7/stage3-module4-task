@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BaseController<T, R, K> {
 
-    Page<R> readAll(int page, int size, String[] sort);
+    List<R> readAll(int page, int size, String sortBy);
 
     R readById(K id);
 

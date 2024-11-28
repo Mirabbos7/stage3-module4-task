@@ -1,17 +1,11 @@
-package com.mjc.school.controller.implementation;
+package com.mjc.school.controller.impl;
 
 import com.mjc.school.controller.BaseController;
 import com.mjc.school.controller.annotation.CommandHandler;
 import com.mjc.school.service.CommentService;
-import com.mjc.school.service.dto.AuthorDtoRequest;
-import com.mjc.school.service.dto.AuthorDtoResponse;
 import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
-import com.mjc.school.service.implementation.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/comments")
-public class CommentController {
-    private final CommentServiceImpl commentService;
+public class CommentController implements BaseController<CommentDtoRequest, CommentDtoResponse, Long> {
+    private final CommentService commentService;
     @Autowired
-    public CommentController(CommentServiceImpl commentService) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
 
@@ -31,16 +25,11 @@ public class CommentController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 16)
-    public Page<CommentDtoResponse> readAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort
-    ) {
-        Pageable pageable = PageRequest.of(page, size, parseSort(sort));
-
-        Page<CommentDtoResponse> comments = commentService.readAll(pageable);
-
-        return comments;
+    public List<CommentDtoResponse> readAll(
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(name = "sort_by", required = false, defaultValue = "id::asc") String sortBy) {
+        return commentService.readAll(page, size, sortBy);
     }
 
     private Sort parseSort(String[] sort) {

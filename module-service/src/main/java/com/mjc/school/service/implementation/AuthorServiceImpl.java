@@ -9,8 +9,6 @@ import com.mjc.school.service.dto.AuthorDtoResponse;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.validator.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,10 +43,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AuthorDtoResponse> readAll(Pageable pageable) {
-        Page<Author> authorPage = authorRepository.readAll(pageable);
-
-        return authorPage.map(author -> mapper.modelToDto(author));
+    public List<AuthorDtoResponse> readAll(int page, int size, String sortBy) {
+        return mapper.modelListToDtoList(authorRepository.readAll(page, size, sortBy));
     }
 
     @Override

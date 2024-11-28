@@ -2,15 +2,10 @@ package com.mjc.school.repository.impl;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.BaseEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
 import javax.persistence.*;
-import javax.persistence.criteria.*;
 import javax.persistence.metamodel.EntityType;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,44 +27,15 @@ public abstract class AbstractDBRepository<T extends BaseEntity<K>, K> implement
     }
 
     @Override
-    public Page<T> readAll(Pageable pageable) {
-        // query
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> query = criteriaBuilder.createQuery(entityClass);
-        Root<T> root = query.from(entityClass);
+    public List<T> readAll(int page, int size, String sortBy) {
+        String[] sort = sortBy.split("::");
+        TypedQuery<T> query = entityManager.createQuery("SELECT e FROM " +
+                entityClass.getSimpleName() + " e ORDER BY e." + sort[0] + " " + sort[1], entityClass);
 
-        //sort
-        if (pageable.getSort() != null) {
-            List<Order> orders = new ArrayList<>();
-            pageable.getSort().forEach(order -> {
-                Path<Object> path = root.get(order.getProperty());
-                if (order.isAscending()) {
-                    orders.add(criteriaBuilder.asc(path));
-                } else {
-                    orders.add(criteriaBuilder.desc(path));
-                }
-            });
-            query.orderBy(orders);
+        if(page > 0 && size > 0) {
+            query.setFirstResult((page - 1) * size).setMaxResults(size);
         }
-
-        //pagination
-        TypedQuery<T> typedQuery = entityManager.createQuery(query);
-
-        int pageNumber = pageable.getPageNumber();
-        int pageSize = pageable.getPageSize();
-        typedQuery.setFirstResult(pageNumber * pageSize);
-        typedQuery.setMaxResults(pageSize);
-
-        //list per page
-        List<T> content = typedQuery.getResultList();
-
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<T> countRoot = countQuery.from(entityClass);
-        countQuery.select(criteriaBuilder.count(countRoot));
-        Long totalElements = entityManager.createQuery(countQuery).getSingleResult();
-
-        //Page object with results
-        return new PageImpl<>(content, pageable, totalElements);
+        return query.getResultList();
     }
 
     @Override

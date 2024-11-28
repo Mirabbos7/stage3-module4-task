@@ -22,5 +22,6 @@ public class CommentDBRepository extends AbstractDBRepository<Comment, Long> imp
     @Override
     void update(Comment prevState, Comment nextState) {
         prevState.setContent(nextState.getContent());
+        prevState.setNews(nextState.getNews());
     }
 }

@@ -4,6 +4,7 @@ import com.mjc.school.repository.TagRepository;
 import com.mjc.school.repository.model.Tag;
 import com.mjc.school.service.TagMapper;
 import com.mjc.school.service.TagService;
+import com.mjc.school.service.dto.AuthorDtoResponse;
 import com.mjc.school.service.dto.TagDtoRequest;
 import com.mjc.school.service.dto.TagDtoResponse;
 import com.mjc.school.service.exceptions.NotFoundException;
@@ -31,10 +32,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TagDtoResponse> readAll(Pageable pageable) {
-        Page<Tag> tagPage = tagRepository.readAll(pageable);
-
-        return tagPage.map(mapper::modelToDto);
+    public List<TagDtoResponse> readAll(int page, int size, String sortBy) {
+        return mapper.modelListToDtoList(tagRepository.readAll(page, size, sortBy));
     }
 
     @Override

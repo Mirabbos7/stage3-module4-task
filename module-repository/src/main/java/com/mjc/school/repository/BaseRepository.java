@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface BaseRepository<T extends BaseEntity<K>, K> {
 
-    Page<T> readAll(Pageable pageable);
+    List<T> readAll(int page, int size, String sortBy);
 
     Optional<T> readById(K id);
 

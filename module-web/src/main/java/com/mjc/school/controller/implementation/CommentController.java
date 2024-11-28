@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/comments")
-public class CommentController implements BaseController<CommentDtoRequest, CommentDtoResponse, Long> {
+public class CommentController {
     private final CommentService commentService;
     @Autowired
     public CommentController(CommentService commentService) {
@@ -28,7 +28,6 @@ public class CommentController implements BaseController<CommentDtoRequest, Comm
 
 
     @GetMapping
-    @Override
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 16)
     public Page<CommentDtoResponse> readAll(
@@ -52,7 +51,7 @@ public class CommentController implements BaseController<CommentDtoRequest, Comm
         return Sort.unsorted();
     }
 
-    @Override
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 17)
@@ -60,7 +59,7 @@ public class CommentController implements BaseController<CommentDtoRequest, Comm
         return commentService.readById(id);
     }
 
-    @Override
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @CommandHandler(operation = 18)
@@ -68,7 +67,7 @@ public class CommentController implements BaseController<CommentDtoRequest, Comm
         return commentService.create(createRequest);
     }
 
-    @Override
+
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 19)
@@ -76,7 +75,7 @@ public class CommentController implements BaseController<CommentDtoRequest, Comm
         return commentService.update(updateRequest);
     }
 
-    @Override
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CommandHandler(operation = 20)

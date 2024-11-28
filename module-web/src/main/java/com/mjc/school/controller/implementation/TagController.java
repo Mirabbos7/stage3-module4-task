@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tags")
-public class TagController implements BaseController<TagDtoRequest, TagDtoResponse, Long> {
+public class TagController {
     private final TagService tagService;
 
     @Autowired
@@ -28,7 +28,6 @@ public class TagController implements BaseController<TagDtoRequest, TagDtoRespon
     }
 
     @GetMapping
-    @Override
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 11)
     public Page<TagDtoResponse> readAll(
@@ -52,7 +51,6 @@ public class TagController implements BaseController<TagDtoRequest, TagDtoRespon
         return Sort.unsorted();
     }
 
-    @Override
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 12)
@@ -60,7 +58,6 @@ public class TagController implements BaseController<TagDtoRequest, TagDtoRespon
         return tagService.readById(id);
     }
 
-    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @CommandHandler(operation = 13)
@@ -68,7 +65,7 @@ public class TagController implements BaseController<TagDtoRequest, TagDtoRespon
         return tagService.create(createRequest);
     }
 
-    @Override
+
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 14)
@@ -76,7 +73,6 @@ public class TagController implements BaseController<TagDtoRequest, TagDtoRespon
         return tagService.update(updateRequest);
     }
 
-    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CommandHandler(operation = 15)

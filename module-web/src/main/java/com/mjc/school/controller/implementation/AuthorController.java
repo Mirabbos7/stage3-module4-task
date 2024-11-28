@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/authors")
-public class AuthorController implements BaseController<AuthorDtoRequest, AuthorDtoResponse, Long> {
+public class AuthorController {
     private final AuthorService authorService;
 
     @Autowired
@@ -25,7 +25,7 @@ public class AuthorController implements BaseController<AuthorDtoRequest, Author
     }
 
     @GetMapping
-    @Override
+
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 6)
     public Page<AuthorDtoResponse> readAll(
@@ -49,7 +49,7 @@ public class AuthorController implements BaseController<AuthorDtoRequest, Author
         return Sort.unsorted();
     }
 
-    @Override
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 7)
@@ -57,7 +57,7 @@ public class AuthorController implements BaseController<AuthorDtoRequest, Author
         return authorService.readById(id);
     }
 
-    @Override
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @CommandHandler(operation = 8)
@@ -65,7 +65,7 @@ public class AuthorController implements BaseController<AuthorDtoRequest, Author
         return authorService.create(createRequest);
     }
 
-    @Override
+
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 9)
@@ -73,7 +73,7 @@ public class AuthorController implements BaseController<AuthorDtoRequest, Author
         return authorService.update(updateRequest);
     }
 
-    @Override
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CommandHandler(operation = 10)

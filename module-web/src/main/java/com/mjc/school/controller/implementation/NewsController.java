@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/news")
-public class NewsController implements BaseController<NewsDtoRequest, NewsDtoResponse, Long> {
+public class NewsController {
     private final NewsService newsService;
     private final AuthorService authorService;
     private final TagService tagService;
@@ -44,7 +44,6 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
 
 
     @GetMapping
-    @Override
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 1)
     public Page<NewsDtoResponse> readAll(
@@ -68,7 +67,6 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
         return Sort.unsorted();
     }
 
-    @Override
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 2)
@@ -76,7 +74,6 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
         return newsService.readById(id);
     }
 
-    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @CommandHandler(operation = 3)
@@ -84,7 +81,6 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
         return newsService.create(createRequest);
     }
 
-    @Override
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @CommandHandler(operation = 4)
@@ -92,7 +88,7 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
         return newsService.update(updateRequest);
     }
 
-    @Override
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CommandHandler(operation = 5)

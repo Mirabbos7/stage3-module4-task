@@ -1,0 +1,12 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+//ainClassName = 'com.mjc.school.Main'
+
+dependencies {
+    implementation project(':module-web')
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+}

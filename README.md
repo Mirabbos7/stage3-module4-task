@@ -1,4 +1,4 @@
-# Rest Basics
+# ORM-JPA
 
 ### Task
 
@@ -8,99 +8,123 @@ The recommended timeline for the whole module is 2 weeks.
 
 #### Business requirements
 
-- Add Comment entity with fields Id, Content(should have length from 5 to 255), NewsId, Created, Modified.
-- Implement REST controllers for Author, News, Tag and Comment entities.
-- Implement exception handler for REST controllers. Use @ControllerAdvice annotation.
-- The REST controllers should support of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations for above mentioned objects.
-- The REST controller methods should:
-  - Support retrieval of collection of authors, tags, news and comments using search criteria, pagination and sorting.
-  - Support retrieval of author, tag, news and comment by id.
-  - Support creation of author, tag, news and comment.
-  - Support modification of author, tag, news and comment.
-  - Support partial modification of author, tag, news and comment using PATCH HTTP Verb.
-  - Support deletion of author, tag, news and comment by id.
-  - Support retrieval of author by news id.
-  - Support retrieval of tags by news id.
-  - Support retrieval of comments by news id.
-  - Support retrieval of news by tag names, tag ids, author name, title, content (all params are optional and can be used
-    in conjunction) [optional].
-- Use versioning of REST controllers and their methods [optional].
-- Use Data transfer objects DTO as input parameters (requests) and output result (response).
-- Validate input parameters (requests) of REST controller methods.
+- Adjust your solution prepared in **Spring core** module to get rid of in-memory data source and use real DB.
+- Add support of [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations for Tag (similar to
+  Instagram hashtags) as well.
+- Support retrieval of author by news id.
+- Support retrieval of tags by news id.
+- Support retrieval of news by tag names, tag ids, author name, title, content (all params are optional and can be used
+  in conjunction).
 
 #### Prerequisites
 
-Your **ORM** solution. Do not delete or move basic interfaces. 
+Your **Spring core** solution. Do not delete or move basic interfaces for `repository`, `service`
+and `controller` layers:
 
-You may create your own REST controller interfaces on the base of the BaseController interface.
+- `com.mjc.school.repository.model.BaseEntity`
+- `com.mjc.school.repository.BaseRepository`
+- `com.mjc.school.service.BaseService`
+- `com.mjc.school.controller.BaseController`
 
-Use Spring Boot starter: `org.springframework.boot:spring-boot-starter-web` for implementing REST functionality.
+Use `org.springframework.boot:spring-boot-starter-data-jpa` dependency for
+your solution, but with only one restriction: **it's prohibited to use CRUD repositories**, because the main goal of
+this module is to get familiar with JPA/ORM:
+
+- Criteria API
+- JPQL
+- Native queries
+
+`org.springframework.boot:spring-boot-starter-data-jpa` dependency is provided to simplify DB related beans
+configuration.
+
+#### DataSource
+
+Domain objects are represented by the following diagram
+
+![](./media/source_model.png "source_model")
+
+and have the following requirements:
+
+- [x] All fields for News (except `authorId`) and Author are required.
+- [x] News _title_ field should have length from 5 to 30.
+- [x] News _content_ field should have length from 5 to 255.
+- [x] News and Author _createdDate_, _lastUpdatedDate_ fields should be
+  in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format. Example: 2018-08-29T06:12:15.156. More discussion
+  here: [stackoverflow: how to get iso 8601](https://stackoverflow.com/questions/3914404/how-to-get-current-moment-in-iso-8601-format-with-date-hour-and-minute)
+  .
+
+> Instead of explicitly set values to `createdDate`, `lastUpdatedDate` fields, you should pay attention to already existing audit
+> mechanism provided by Spring and JPA).
+
+- [x] News _authorId_ field should be mapped to the author datasource.
+- [x] Author _name_ field should have length from 3 to 15.
+- [x] Tag _name_ field should have length from 3 to 15.
+- [x] Tag and News should have many-to-many relationship.
 
 #### Operations
 
-The system should expose CRUD operations for News, Author, Tag and Comments from the __web__ module in the project:
+The system should expose CRUD operations for News, Author and Tag from the __main__ module in the root project:
 
-- [x] Create News - fill only title, content, authorId, tag ids (optional) in news dto request and return created news,
-  as dto response, http response status - 201.
-- [x] Create Author - fill only name in author dto request and return created author, as dto response, http response status - 201.
-- [x] Create Tag - fill only name in tag dto request and return created tag as dto response, http response status - 201.
-- [x] Create Comment - fill only content and newsId in comment dto request and return created comment as dto response,
-  http response status - 201.
+- [x] Create News - fill only title, content, authorId, tag ids (optional) and return created news.
+- [x] Create Author - fill only name and return created author.
+- [x] Create Tag - fill only name and return created tag.
+- [x] Get All News – return list of news.
+- [x] Get All Authors – return list of authors.
+- [x] Get All Tags – return list of tags.
+- [x] Get News by id – return news by provided id.
+- [x] Get Author by id – return author by provided id.
+- [x] Get Tag by id – return tag by provided id.
+- [x] Update News – update only title, content, authorId, tag ids (optional) by provided news id and return updated
+  news.
+- [x] Update Author – update only name by provided author id and return updated author.
+- [x] Update Tag – update only name by provided tag id and return updated tag.
+- [x] Delete News – delete news by provided news id and return boolean value.
+- [x] Delete Author – delete author by provided author id and return boolean value. When deleting author you could
+  choose 2 options:
+    - set `authorId` field for corresponding news to `null`.
+    - remove corresponding news.
 
-- [x] Get All News – return list of news dtos using search criteria, pagination and sorting, http response status - 200.
-- [x] Get All Authors – return list of authors dtos using search criteria, pagination and sorting, http response status - 200.
-- [x] Get All Tags – return list of tag dtos using search criteria, pagination and sorting, http response status - 200.
-- [x] Get All Comments – return list of comment dtos using search criteria, pagination and sorting, http response status - 200.
-
-- [x] Get News by id – return news by provided id, http response status - 200.
-- [x] Get Author by id – return author by provided id, http response status - 200.
-- [x] Get Tag by id – return tag by provided id, http response status - 200.
-- [x] Get Comment by id – return comment by provided id, http response status - 200.
-
-- [x] Update News – update only title, content, authorId, tag ids [tag ids are optional] by provided news id and return updated
-  news as dto, http response status - 200.
-- [x] Update Author – update only name by provided author id and return updated author as dto, http response status - 200.
-- [x] Update Tag – update only name by provided tag id and return updated tag as dto, http response status - 200.
-- [x] Update Comment – update only content by provided comment id and return updated comment as dto, http response status - 200.
-
-- [x] Delete News – delete news by provided news id and return no value, http response status - 204.
-- [x] Delete Author – delete author by provided author id and return no value, http response status - 204.
-- [x] Delete Tag – delete tag by provided tag id and return no value, http response status - 204.
-- [x] Delete Comment – delete comment by provided comment id and return no value, http response status - 204.
-
-- [x] Get Author by news id – return author as dto by provided news id, http response status - 200.
-- [x] Get Tags by news id – return tags as list of dtos by provided news id, http response status - 200.
-- [x] Get Comments by news id – return comments as list of dtos by provided news id, http response status - 200.
+  Instead of explicitly maintaining data consistency (deleting related entities together with the parent one manually),
+  you should pay attention to the correct description of relationships between entities using JPA
+  annotations: `@OneToOne`, `@OneToMany`, `@ManyToMany` or use foreign key constraints in sql scripts.
+- [x] Delete Tag – delete tag by provided tag id and return boolean value.
+- [x] Get Author by news id – return author by provided news id.
+- [x] Get Tags by news id – return tags by provided news id.
 - [x] Get News by tag names, tag ids, author name, title, content (all params are optional and can be used in
-  conjunction) – return news by provided params, http response status - 200. [optional].
+  conjunction) – return news by provided params.
 
-All returned and received data should be like [DTO](https://en.wikipedia.org/wiki/Data_transfer_object) type.
+As well as in the **Spring Core** module all returned and received data should be
+like [DTO](https://en.wikipedia.org/wiki/Data_transfer_object) type.
 
-The mapping between the `dto` and the `model (domain object)` should be done at the service layer using any library.
-For example: [Mapstruct](https://mapstruct.org/), [Modelmapper](http://modelmapper.org/).
+> It would be interesting to read about `LazyInitializationException` and reasons to use DTO pattern along with JPA.
+
+The mapping between the `dto` and the `model (domain object)` should be done at the service layer using any library. For
+example: [Mapstruct](https://mapstruct.org/), [Modelmapper](http://modelmapper.org/).
 
 #### Validation
 
-All input parameters (requests) should be validated directly in business logic code via custom validation or spring functionality.
->Note: to support your custom annotations and perform validation outside of business logic code you can use
-> e.g. [Aspects](https://docs.spring.io/spring-framework/docs/5.3.x/reference/html/core.html#aop).
+Validate all the input according to the rules described in [DataSource](#datasource). It can be done by directly
+implementing all validations in business logic code or declaratively, e.g. via custom annotations.
+> To support your custom annotations and perform validation outside of business logic code you can use
+> e.g. [Aspects][1].
 
 #### Testing
 
-- [x] Cover controller layer with JUnit tests using e.g. [RestAssured Framework](https://semaphoreci.com/community/tutorials/testing-rest-endpoints-using-rest-assured).
+- [x] Cover service layer with JUnit tests.
 
 #### General requirements:
 
 1. Code should be clean and should not contain any “developer-purpose” constructions.
-2. App should be designed and written with respect to OOD, SOLID principles and best REST design practices.
+2. App should be designed and written with respect to OOD and SOLID principles.
 3. Clear layered structure should be used with responsibilities of each application layer defined.
 4. All business logic should be written in the module-service: mapping `model` to `dto` and vice versa, validation, etc.
-5. Module-web should accept and return `dto` data transfer objects.
-6. Controller methods that return collection of `dto` should support pagination and sorting.
-7. Controllers and their methods should support versioning.
-8. Convenient error/exception should be implemented: all errors should be meaningful. Errors should
+5. Module-web and module-service should accept and return `dto` objects.
+6. Module-repository should accept and return `model` objects.
+7. Convenient error/exception should be implemented: all errors should be meaningful. Errors should
    contain `errorMessage` and `errorCode`, where `errorCode` is your custom code.
-9. Application should be tested and pass all tests suites.
+8. Application should be tested and pass all tests suites.
+9. Change archunit-junit dependency to archunit-junit5:  `testImplementation "com.tngtech.archunit:archunit-junit5:1.0.0"`
+10. Use javax `implementation "org.springframework.boot:spring-boot-starter-data-jpa:2.7.7"`. Exactly `2.7.7` version, because older versions is jakarta.
 
 #### Application requirements:
 
@@ -110,5 +134,6 @@ All input parameters (requests) should be validated directly in business logic c
 4. Java Code Convention is mandatory.
 
 #### Our solution review:
-
 If you have finished task and would like to see the original solution of it written by our experts, write in #stage-3 channel about it. Access will be provided.
+
+[1]: https://docs.spring.io/spring-framework/docs/5.3.x/reference/html/core.html#aop
